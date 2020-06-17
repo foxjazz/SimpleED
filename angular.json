@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "SimpleED"
+    }
+  },
+  "defaultProject": "SimpleED",
+  "cli": {
+    "analytics": "eb684e74-2f81-4d2f-b859-843a7c339425"
+  }
 }
