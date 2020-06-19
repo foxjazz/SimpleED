@@ -1,1 +1,13 @@
 
+<div>
+  <div>
+
+    <input type="text" [(ngModel)]="queryString" id="search" placeholder="Search to type">
+
+    <ul>
+      <li *ngFor="let n of systems | FilterPipe: queryString">
+        {{n.name}}
+      </li>
+    </ul>
+  </div>
+</div>

@@ -4,6 +4,4 @@ export interface System {
   name: string;
   primary_economy_id: number;
 }
-export interface Systems {
-  system: [];
-}
+
