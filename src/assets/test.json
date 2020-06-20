@@ -1,0 +1,8 @@
+{ "systems": [
+  {"id": 1,"edsm_id": 12695,"name": "1 G. Caeli","is_populated": 1},
+  {"id": 2,"edsm_id": 3979,"name": "1 Geminorum","is_populated": 1},
+  {"id": 3,"edsm_id": 15225,"name": "1 Hydrae","is_populated": 1},
+  {"id": 4,"edsm_id": 19210,"name": "1 i Centauri","is_populated": 1},
+  {"id": 5,"edsm_id": 10902,"name": "1 Kappa Cygni","is_populated": 1},
+  {"id": 6,"edsm_id": 7464,"name": "10 Arietis","is_populated": 1}]
+}

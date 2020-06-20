@@ -2,10 +2,10 @@
 <div>
   <div>
 
-    <input type="text" [(ngModel)]="queryString" id="search" placeholder="Search to type">
-
+    <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="Search to type">
+    filter: {{search}}
     <ul>
-      <li *ngFor="let n of systems | FilterPipe: queryString">
+      <li *ngFor="let n of systemsFilter">
         {{n.name}}
       </li>
     </ul>

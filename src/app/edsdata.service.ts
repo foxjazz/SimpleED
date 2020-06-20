@@ -22,7 +22,8 @@ export class EDSDataService{
   }
 
   public getSystemsObs(): Observable<any>{
-    return this.h.get<any>("../assets/populatedSystems.json")
+    //return this.h.get<any>("../assets/test.json")
+     return this.h.get<any>("../assets/populatedSystems.json")
   }
   public getSystems(){
     this.getSystemsObs().subscribe(a => {
