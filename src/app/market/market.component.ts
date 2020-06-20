@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {EDSDataService} from "../edsdata.service";
 import {System} from "../Models/system";
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {FilterPipe} from "../filter.pipe";
+import {MarketData} from "../Models/Commodities";
 
 @Component({
   selector: 'app-market',
@@ -17,11 +18,21 @@ export class MarketComponent implements OnInit {
   name: string;
   search: string;
   systemsFilter: System[];
+  results: string;
+  marketData: MarketData[];
+
   constructor(
     private dataService: EDSDataService
 
-  ) {this.search = ""; }
-
+  ) {this.search = ""; this.marketData = []}
+  getData() {
+    if (this.systemsFilter.length > 1 || this.systemsFilter.length < 1){
+      this.results = "filter needs to return 1 item."
+    }
+    else{
+      this.dataService.getData(this.systemsFilter[0]);
+    }
+  }
   doSearch(){
     if (this.search.length === 0) {
       this.systemsFilter = this.systems;
@@ -36,6 +47,9 @@ export class MarketComponent implements OnInit {
 
 
   ngOnInit() {
+    this.dataService.notifyDP.subscribe(() => {
+      this.marketData = this.dataService.marketData;
+    })
     this.dataService.getSystemsObs().subscribe(posts => {
       this.systems = posts.systems;
       this.dataService.systems = posts.systems;

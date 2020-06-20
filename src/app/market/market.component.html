@@ -3,11 +3,44 @@
   <div>
 
     <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="Search to type">
-    filter: {{search}}
+    <button (click)="getData()">getData</button>
+    <div>
+      results: {{results}}
+    </div>
     <ul>
       <li *ngFor="let n of systemsFilter">
         {{n.name}}
       </li>
     </ul>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          station
+        </th>
+        <th>
+          product
+        </th>
+        <th>
+          buy price
+        </th>
+        <th>
+          demand
+        </th>
+        <th>
+          sell price
+        </th>
+
+      </tr>
+      <tr *ngFor="let m of marketData">
+        <td>{{m.stationName}} </td>
+        <td>{{m.name}} </td>
+        <td>{{m.sellPrice}} </td>
+        <td>{{m.demand}} </td>
+        <td>{{m.buyPrice}} </td>
+      </tr>
+
+    </table>
   </div>
 </div>
