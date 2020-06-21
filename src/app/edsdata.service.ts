@@ -19,9 +19,17 @@ export class EDSDataService{
     this.getMarketUri = "https://www.edsm.net/api-system-v1/stations/market?systemId=SYSID&stationName=STATIONNAME";
     this.ready = false;
     this.notifyDP = new Subject<null>();
-    this.getSystems();
+    this.load3Diamond();
   }
-
+  load3DiamondObs(): Observable<any>{
+    return this.h.get<any>("../assets/3Diamond.json")
+  }
+  load3Diamond(){
+    this.load3DiamondObs().subscribe(a => {
+      this.systems = a.systems;
+      this.ready = true;
+    })
+  }
   public getSystemsObs(): Observable<any>{
     //return this.h.get<any>("../assets/test.json")
      return this.h.get<any>("../assets/populatedSystems.json")
@@ -40,7 +48,7 @@ export class EDSDataService{
   public marketData: MarketData[];
   private edsmId: string;
   notifyDP: Subject<null>;
-  public getMarket(sys: string, name: string)  {
+  public getMarket(sys: string, name: string, total: number)  {
     let uri = this.getMarketUri.replace("SYSID", sys);
     uri = uri.replace("STATIONNAME", name);
     this.getMarketObj(uri).subscribe(a => {
@@ -49,7 +57,9 @@ export class EDSDataService{
         m = cc;
         m.stationName = name;
        this.marketData.push(m);
-       this.notifyDP.next();
+       if (this.marketData.length === total) {
+         this.notifyDP.next();
+       }
       }
     })
   }
@@ -68,7 +78,7 @@ export class EDSDataService{
     this.getStationsObj(uri).subscribe(a => {
       this.stations = a.stations;
       for(const h of a.stations){
-        this.getMarket(this.edsmId, h.name)
+        this.getMarket(this.edsmId, h.name, a.stations.length)
       }
     })
   }

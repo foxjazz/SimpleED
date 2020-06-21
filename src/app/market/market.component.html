@@ -1,8 +1,16 @@
 
 <div>
   <div>
+    how to contribute:  code is on github at: <a href="https://github.com/foxjazz/SimpleED">SimpleED</a>
+  </div>
+  <div>
 
-    <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="Search to type">
+    <div>
+      <button (click)="load3Diamond()">Load 3 diamond site</button>
+      <button (click)="loadAll()">Load all populated</button>
+    </div>
+    <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="System name goes here">
+
     <button (click)="getData()">getData</button>
     <div>
       <button (click)="sortMe()">sort</button>
@@ -19,26 +27,19 @@
         <th>
           station
         </th>
-        <th>
-          product
-        </th>
-        <th>
-          buy price
-        </th>
-        <th>
-          demand
-        </th>
-        <th>
-          sell price
-        </th>
-
+        <ng-container  *ngFor="let p of products">
+          <th>{{p}}</th>
+          <th>buy price</th>
+          <th>Demand</th>
+        </ng-container>
       </tr>
-      <tr *ngFor="let m of marketData">
-        <td>{{m.stationName}} </td>
-        <td>{{m.name}} </td>
-        <td>{{m.sellPrice}} </td>
-        <td>{{m.demand}} </td>
-        <td>{{m.buyPrice}} </td>
+      <tr *ngFor="let m of marketList">
+        <ng-container *ngFor="let p of m">
+          <td>{{p.stationName}}</td>
+          <td>{{p.name}} </td>
+          <td>{{p.demand}} </td>
+          <td>{{p.buyPrice}} </td>
+        </ng-container>
       </tr>
 
     </table>
