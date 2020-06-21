@@ -5,7 +5,7 @@
     <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="Search to type">
     <button (click)="getData()">getData</button>
     <div>
-      results: {{results}}
+      <button (click)="sortMe()">sort</button>
     </div>
     <ul>
       <li *ngFor="let n of systemsFilter">

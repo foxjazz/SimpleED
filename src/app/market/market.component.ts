@@ -44,12 +44,23 @@ export class MarketComponent implements OnInit {
     //this.filter();
   }
 
-
+  sortMe() {
+    this.marketData = this.dataService.marketData.sort((a, b) =>{
+      if(a.stationName > b.stationName){
+        return 1;
+      }
+      if (b.stationName > a.stationName){
+        return -1;
+      }
+      return 0;
+    } );
+  }
 
   ngOnInit() {
     this.dataService.notifyDP.subscribe(() => {
       this.marketData = this.dataService.marketData;
-    })
+    });
+
     this.dataService.getSystemsObs().subscribe(posts => {
       this.systems = posts.systems;
       this.dataService.systems = posts.systems;
