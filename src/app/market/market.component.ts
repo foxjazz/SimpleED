@@ -63,21 +63,16 @@ export class MarketComponent implements OnInit {
 
 
   sortMe() {
-    this.marketData = this.dataService.marketData.sort((a, b) =>{
-      if (a.sellPrice > b.sellPrice) {
-        return -1;
-      }
-      if (a.sellPrice > b.sellPrice) {
-        return 1
-      }
-      if (a.stationName > b.stationName) {
+    this.marketList = this.marketList.sort((a,b) => {
+      if (a.StationName > b.StationName){
         return 1;
       }
-      if (b.stationName > a.stationName) {
+      if (a.StationName < b.StationName){
         return -1;
       }
       return 0;
-    } );
+    });
+
   }
 
   setProduct(s: string){
