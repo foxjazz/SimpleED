@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {System} from "./Models/system";
-import {Observable, Subject} from "rxjs";
+import {Observable, Observer, Subject} from "rxjs";
 import {Station, StationHead} from "./Models/stations";
 import {Commodities, MarketData} from "./Models/Commodities";
 
@@ -13,12 +13,16 @@ export class EDSDataService{
   private getStationsUri: string;
   private getMarketUri: string;
   private ready: boolean;
+
+  private obsSystems;
+
+  notifyDP: Subject<string>;
   searchOption=[]
   constructor(private h: HttpClient) {
     this.getStationsUri = "https://www.edsm.net/api-system-v1/stations?systemName=";
     this.getMarketUri = "https://www.edsm.net/api-system-v1/stations/market?systemId=SYSID&stationName=STATIONNAME";
     this.ready = false;
-    this.notifyDP = new Subject<null>();
+    this.notifyDP = new Subject<string>();
     this.load3Diamond();
   }
   load3DiamondObs(): Observable<any>{
@@ -35,7 +39,7 @@ export class EDSDataService{
      return this.h.get<any>("../assets/populatedSystems.json")
   }
   public getSystems(){
-    this.getSystemsObs().subscribe(a => {
+    this.obsSystems = this.getSystemsObs().subscribe(a => {
       this.systems = a.systems;
       this.ready = true;
     })
@@ -47,20 +51,24 @@ export class EDSDataService{
   private system: System;
   public marketData: MarketData[];
   private edsmId: string;
-  notifyDP: Subject<null>;
+
   public getMarket(sys: string, name: string, total: number)  {
     let uri = this.getMarketUri.replace("SYSID", sys);
     uri = uri.replace("STATIONNAME", name);
     this.getMarketObj(uri).subscribe(a => {
-      for(const cc of a.commodities) {
-        let m: MarketData;
-        m = cc;
-        m.stationName = name;
-       this.marketData.push(m);
-       if (this.marketData.length === total) {
-         this.notifyDP.next();
-       }
+      if (a.commodities && a.commodities.length > 0) {
+        for (const cc of a.commodities) {
+          let m: MarketData;
+          m = cc;
+          m.stationName = name;
+          this.marketData.push(m);
+        }
       }
+      if (this.marketData.length === total) {
+        const md = JSON.stringify(this.marketData);
+        this.notifyDP.next(md);
+      }
+
     })
   }
   public getMarketObj(uri: string): Observable<Commodities> {

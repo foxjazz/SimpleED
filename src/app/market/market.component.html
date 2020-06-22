@@ -34,9 +34,9 @@
         </ng-container>
       </tr>
       <tr *ngFor="let m of marketList">
-        <ng-container *ngFor="let p of m">
-          <td>{{p.stationName}}</td>
-          <td>{{p.name}} </td>
+        <td>{{m.StationName}}</td>
+        <ng-container *ngFor="let p of m.Products">
+          <td>{{p.product}} </td>
           <td>{{p.demand}} </td>
           <td>{{p.buyPrice}} </td>
         </ng-container>

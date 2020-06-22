@@ -23,8 +23,8 @@ export interface MarketData
   "stockBracket": number;
 }
 export interface MarketSheet{
-  "stationName": string;
-
+  "StationName": string;
+  "Products": Product[];
 }
 export interface Product {
   product: string;

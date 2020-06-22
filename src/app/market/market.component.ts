@@ -5,7 +5,7 @@ import {FormControl} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {FilterPipe} from "../filter.pipe";
-import {MarketData, Product} from "../Models/Commodities";
+import {MarketData, MarketSheet, Product} from "../Models/Commodities";
 
 @Component({
   selector: 'app-market',
@@ -21,7 +21,7 @@ export class MarketComponent implements OnInit {
   results: string;
   marketData: MarketData[];
   products: string[];
-  marketList: any[][];
+  marketList: MarketSheet[];
   tempStations: string[];
   constructor(
     private dataService: EDSDataService
@@ -91,26 +91,36 @@ export class MarketComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.dataService.notifyDP.subscribe(() => {
-      this.tempStations = [];
-      let productsall = []
-      let products = []
-      for(const n of this.dataService.marketData){
-        if (n.demand > 0 && n.sellPrice > 1) {
+    this.dataService.notifyDP.subscribe((marketD: string) => {
+
+      const tempStations: string[] = [];
+      const tempMarketList: MarketSheet[] = [];
+      const marketData: MarketData[] = JSON.parse(marketD);
+      let fun: MarketSheet;
+      for(const n of marketData){
+        if (n.demand > 0 && n.sellPrice > 1 && n.name != null) {
           this.setProduct(n.name);
         }
       }
-      for (let comm of this.dataService.marketData){
-        let arr: any[];
-        if (this.tempStations.includes(comm.stationName)){
-          break;
+      this.products = this.products.sort((a, b) => {
+        if (a > b){
+          return 1;
         }
-        this.tempStations.push(comm.stationName);
-        let data = this.getProducts(comm.stationName);
-        
-        this.marketList.push(data);
+        if (a < b){
+          return -1
+        }
+        return 0;
+      })
+      for (let comm of marketData){
+        if (!this.hasStations(this.tempStations, comm.stationName)){
+          console.log(comm.stationName);
+          tempStations.push(comm.stationName);
+          let data: Product[] = this.getProducts(comm.stationName);
+          fun = {StationName: comm.stationName,  Products: data};
+          tempMarketList.push(fun);
+        }
       }
-      this.marketData = this.dataService.marketData;
+      this.marketList = tempMarketList;
 
     });
 
@@ -120,9 +130,24 @@ export class MarketComponent implements OnInit {
       this.doSearch();
     });
   }
+  hasStations(temp: string[], search: string): boolean{
+    if (temp == null){
+      return false;
+    }
+    if (temp && temp.length == 0){
+      return false;
+    }
+    for(const l of temp){
+      if (l === search){
+        return true;
+      }
+    }
+    return false;
+  }
   getProducts(sn: string): Product[]{
     const ret: Product[] = [];
     const tempRet: Product[] = [];
+    let tempRetSorted: Product[] = [];
     let p: Product;
     for(let a of this.dataService.marketData){
       if (a.stationName == sn){
@@ -130,8 +155,19 @@ export class MarketComponent implements OnInit {
         tempRet.push(p);
       }
     }
+
+
+    tempRetSorted =   tempRet.sort((a, b) => {
+      if (a.product > b.product){
+        return 1;
+      }
+      if(b.product > a.product) {
+        return -1;
+      }
+      return 0;
+    });
     for(const g of this.products){
-      for(const d of tempRet){
+      for(const d of tempRetSorted){
         if (d.product === g){
           ret.push(d);
         }else {
