@@ -9,9 +9,17 @@
       <button (click)="load3Diamond()">Load 3 diamond site</button>
       <button (click)="loadAll()">Load all populated</button>
     </div>
-    <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="System name goes here">
+    <div>
+      <input type="text" [(ngModel)]="search" (keyup)="doSearch()" id="search" placeholder="System name goes here">
 
-    <button (click)="getData()">getData</button>
+      <div *ngIf="products">
+        <ng-container *ngFor="let pr of products">
+          <mat-checkbox checked="true" (change)="onCheck(pr, $event.checked)">{{pr}}</mat-checkbox>
+        </ng-container>
+
+      </div>
+      <button (click)="getData()">getData</button> 
+    </div>
     <div>
       <button (click)="sortMe()">sort</button>
     </div>

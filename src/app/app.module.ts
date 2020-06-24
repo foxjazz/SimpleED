@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { FilterPipe } from './filter.pipe';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { FilterPipe } from './filter.pipe';
     FilterPipe
   ],
   imports: [
-    BrowserModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule
+    BrowserModule, HttpClientModule, FormsModule, BrowserAnimationsModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatCheckboxModule
   ],
   providers: [EDSDataService],
   bootstrap: [AppComponent]

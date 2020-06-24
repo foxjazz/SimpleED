@@ -23,6 +23,7 @@ export class MarketComponent implements OnInit {
   products: string[];
   marketList: MarketSheet[];
   tempStations: string[];
+  selectedProducts: string[];
   constructor(
     private dataService: EDSDataService
 
@@ -93,7 +94,7 @@ export class MarketComponent implements OnInit {
       const marketData: MarketData[] = JSON.parse(marketD);
       let fun: MarketSheet;
       for(const n of marketData){
-        if (n.demand > 0 && n.sellPrice > 1 && n.name != null) {
+        if (n.demand > 60 && n.sellPrice > 100000 && n.name != null) {
           this.setProduct(n.name);
         }
       }
@@ -146,7 +147,7 @@ export class MarketComponent implements OnInit {
     let p: Product;
     for(let a of this.dataService.marketData){
       if (a.stationName == sn){
-        p = {product: a.name, buyPrice: a.buyPrice, demand: a.demand}
+        p = {product: a.name, buyPrice: a.sellPrice, demand: a.demand}
         tempRet.push(p);
       }
     }
@@ -163,16 +164,31 @@ export class MarketComponent implements OnInit {
     });
     for(const g of this.products){
       for(const d of tempRetSorted){
-        if (d.product === g){
-          ret.push(d);
-        }else {
-          p = { product: g, buyPrice: 0, demand: 0};
-          ret.push(p);
+        if (this.products.includes(d.product)) {
+          if (d.product === g) {
+            ret.push(d);
+          } else {
+            p = {product: g, buyPrice: 0, demand: 0};
+            ret.push(p);
+          }
         }
       }
     }
     return ret;
   }
+  onCheck(pr: string, checked: boolean){
+    const hasItem = this.selectedProducts.includes(pr);
+    if (hasItem && checked){
+      return;
+    }else if (hasItem && !checked){
+      const idx = this.selectedProducts.indexOf(pr);
+      this.selectedProducts.splice(idx,1);
+    }
+    else if (!hasItem && checked){
+      this.selectedProducts.push(pr);
+    }
+    return;
 
+  }
 
 }
